@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=0,viewport-fit=cover">
+  <title>LIFF Plugin</title>
+  <link rel="stylesheet" href="css/plugin.css">
+</head>
+
+<body>
+  <div id="container">
+    <h1>...</h1>
+    <h5>...</h5>
+    <input type="number" id="height" placeholder="Height in cm">
+    <input type="number" id="weight" placeholder="Weight in kg">
+    <button type="button">Calculate</button>
+    <h2>...</h2>
+  </div>
+
+  <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
+  <script src="plugins/liff-bmi.js"></script>
+  <script>
+    const h1Element = document.querySelector("h1");
+    const h2Element = document.querySelector("h2");
+    const h5Element = document.querySelector("h5");
+    const heightElement = document.querySelector("#height");
+    const weightElement = document.querySelector("#weight");
+    const btnElement = document.querySelector("button");
+
+    liff.use(new BMIPlugin(), { date: new Date()});
+    h5Element.innerHTML = liff.$bmi.today;
+    btnElement.onclick = () => {
+      h2Element.innerHTML = liff.$bmi.cal(heightElement.value, weightElement.value);
+    }
+
+    const main = async() => {
+      await liff.init({liffId: "1653575653-y90Q19AP"});
+      if (liff.isLoggedIn()) {
+        const profile = await liff.getProfile();
+        h1Element.innerHTML = liff.$bmi.greet(liff.getLanguage(), profile);
+      } else {
+        liff.login();
+      }
+    }
+    main();
+  </script>
+</body>
+
+</html>
